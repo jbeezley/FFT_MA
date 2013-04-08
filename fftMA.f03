@@ -99,7 +99,7 @@ module fftma
         real(dp), allocatable, dimension(:,:,:,:)                    :: Z
         complex(dp), allocatable, dimension(:,:,:)                   :: fC, fZ, fR
 
-        allocate(Z(1:this % Nrel,1:nxx, 1:nyy, 1:nzz), C(1:nxx, 1:nyy, 1:nzz), A(1:this%Nrel,1:this%nx, 1:this%ny, 1:this%nz))
+        allocate(Z(1:nxx, 1:nyy, 1:nzz,1:this % Nrel), C(1:nxx, 1:nyy, 1:nzz), A(1:this%nx, 1:this%ny, 1:this%nz,1:this%Nrel))
         allocate(fZ(1:nxx/2+1, 1:nyy, 1:nzz), fC(1:nxx/2+1, 1:nyy, 1:nzz), fR(1:nxx/2+1, 1:nyy, 1:nzz), phi(1:nxx, 1:nyy, 1:nzz))
 
         call dfftw_init_threads(iret)
@@ -127,14 +127,14 @@ module fftma
         do i = 1, this % Nrel
             call dfftw_execute_dft_r2c(planC, C, fC)
             ! make the fourie transform of the white noise
-            call dfftw_execute_dft_r2c(planZ, Z(i,:,:,:), fZ)
+            call dfftw_execute_dft_r2c(planZ, Z(:,:,:,i), fZ)
             ! calculate the square root of the fourie transformed covaraince structure and multiply with the
             ! transformed white noise sequence
             fR = std * sqrt(fc) * fZ
             ! Back transform everything
             call dfftw_execute_dft_c2r(planR, fR, phi)
             !            ! slice to the desired size and add the mean value
-            A(i,:,:,:) = phi(1:this % nx, 1:this % ny, 1:this % nz) * scale + this % mean
+            A(:,:,:,i) = phi(1:this % nx, 1:this % ny, 1:this % nz) * scale + this % mean
         end do
         t2 = omp_get_wtime()
         print *, 'Time :',t2-t1
