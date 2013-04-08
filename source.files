@@ -14,5 +14,8 @@ FORTRANFILES = \
 	par_zig_mod.f90\
 	par_seed_mod.f90\
 	mod_fftw3.f90\
-	fftMA.f03\
-	mainf.f03
+	fftMA.f03
+
+FORTRANMAIN = mainf.f03
+FORTRANSHORTLIB=fftma
+FORTRANLIB = lib$(FORTRANSHORTLIB).a
