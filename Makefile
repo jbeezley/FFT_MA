@@ -1,6 +1,6 @@
 .SUFFIXES: .o .cc .f90 .f03 .cpp .h .hpp  
-FC = gfortran-4.7
-LD  = gfortran-4.7
+FC = gfortran
+LD  = gfortran
 
 CC = g++-4.7
 LCC = g++-4.7
