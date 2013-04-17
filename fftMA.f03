@@ -177,12 +177,12 @@ module fftma
         allocate(seed(this%npar))
         call omp_set_num_threads(this%npar)
         call set_time_seed(this%npar)
-        allocate(ru(1:this % Nrel,1:nxx,1:nyy,1:nzz))
+        allocate(ru(1:nxx,1:nyy,1:nzz,1:this%Nrel))
         !$omp parallel do private(i,j,k,l,kpar)
-        do k = 1, nzz
-            do j = 1, nyy
-                do i = 1, nxx
-                    do l = 1, this % Nrel
+        do k = 1, this%Nrel
+            do j = 1, nzz
+                do i = 1, nyy
+                    do l = 1,nxx
                         kpar = omp_get_thread_num()
                         ru(l, i, j, k) = par_rnor(kpar)
                     end do
